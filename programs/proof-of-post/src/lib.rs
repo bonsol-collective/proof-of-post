@@ -4,14 +4,15 @@ use anchor_lang::solana_program::sysvar::Sysvar;
 use bonsol_anchor_interface::instructions::{
     execute_v1, CallbackConfig, ExecutionConfig, InputRef,
 };
-use bonsol_anchor_interface::{Bonsol};
+use bonsol_anchor_interface::Bonsol;
 
 use anchor_lang::solana_program::program::invoke_signed;
 use bonsol_anchor_interface::callback::handle_callback;
 
 // Change this ID and make your own if you want to deploy to devnet
 declare_id!("5MQLTq2D5ZhUAc6TDoAMXfnMeA32bo5DUxYco5LDMKAA");
-const POST_VERIFICATION_IMAGE_ID: &str = "86eee7deeb7a2aa479c183db83bb208ff5302dd6acfc46d05aacaa1c9107f43f";
+const POST_VERIFICATION_IMAGE_ID: &str =
+    "e4836295bfe6bd17f8907d071535ff03fdf24aa6bc562792833b17dfc44703bb";
 
 #[error_code]
 pub enum PostProofError {
@@ -39,7 +40,7 @@ pub mod proof_of_post {
 
     pub fn create_config(ctx: Context<CreateConfig>, args: CreateConfigArgs) -> Result<()> {
         msg!("Creating PostProofConfig");
-        
+
         ctx.accounts.post_proof_config.creator = ctx.accounts.creator.key();
         ctx.accounts.post_proof_config.seeds = args.seeds;
         ctx.accounts.post_proof_config.keywords = args.keywords;
@@ -51,10 +52,11 @@ pub mod proof_of_post {
 
         // transfer initial funds to config account
         let rent = Rent::get()?;
-        let min_balance = rent.minimum_balance(ctx.accounts.post_proof_config.to_account_info().data_len());
+        let min_balance =
+            rent.minimum_balance(ctx.accounts.post_proof_config.to_account_info().data_len());
         let total_required = min_balance + args.reward_amount * args.max_claimers;
 
-       if total_required > 0 {
+        if total_required > 0 {
             anchor_lang::system_program::transfer(
                 CpiContext::new(
                     ctx.accounts.system_program.to_account_info(),
@@ -72,7 +74,7 @@ pub mod proof_of_post {
 
     pub fn update_config(ctx: Context<UpdateConfig>, args: UpdateConfigArgs) -> Result<()> {
         msg!("Updating PostProofConfig");
-        
+
         if let Some(active) = args.active {
             ctx.accounts.post_proof_config.active = active;
         }
@@ -82,7 +84,7 @@ pub mod proof_of_post {
         if let Some(reward_amount) = args.reward_amount {
             ctx.accounts.post_proof_config.reward_amount = reward_amount;
         }
-        
+
         Ok(())
     }
 
@@ -95,20 +97,22 @@ pub mod proof_of_post {
         }
 
         // Check if max claimers reached
-        if ctx.accounts.post_proof_config.claimers_count >= ctx.accounts.post_proof_config.max_claimers {
+        if ctx.accounts.post_proof_config.claimers_count
+            >= ctx.accounts.post_proof_config.max_claimers
+        {
             return Err(PostProofError::MaxClaimersReached.into());
         }
 
         // Check if config has sufficient funds for reward
-        if ctx.accounts.post_proof_config.to_account_info().lamports() < ctx.accounts.post_proof_config.reward_amount {
+        if ctx.accounts.post_proof_config.to_account_info().lamports()
+            < ctx.accounts.post_proof_config.reward_amount
+        {
             return Err(PostProofError::InsufficientFunds.into());
         }
 
         // Expected requester PDA
-        let (expected_requester, _bump) = Pubkey::find_program_address(
-            &[args.current_req_id.as_bytes()],
-            &crate::id(),
-        );
+        let (expected_requester, _bump) =
+            Pubkey::find_program_address(&[args.current_req_id.as_bytes()], &crate::id());
         if ctx.accounts.requester.key() != expected_requester {
             return Err(PostProofError::PostVerificationRequestFailed.into());
         }
@@ -145,7 +149,12 @@ pub mod proof_of_post {
         let keywords_string = ctx.accounts.post_proof_config.keywords.join(",");
         let keywords_bytes = keywords_string.as_bytes();
 
-        msg!("satyam123, post_size: {}, post_url: {}, keyword_string: {:?}", args.post_size, args.post_url, keywords_string);
+        msg!(
+            "satyam123, post_size: {}, post_url: {}, keyword_string: {:?}",
+            args.post_size,
+            args.post_url,
+            keywords_string
+        );
 
         // Build public input: [post_size(8)][keywords_size(8)][keywords_string]
         let mut public_input = Vec::new();
@@ -174,22 +183,10 @@ pub mod proof_of_post {
                 program_id: crate::id(),
                 instruction_prefix: vec![181, 16, 138, 77, 227, 78, 167, 151], // bonsol_callback instruction discriminator
                 extra_accounts: vec![
-                    AccountMeta::new_readonly(
-                        ctx.accounts.requester.key(),
-                        false,
-                    ),
-                    AccountMeta::new(
-                        ctx.accounts.post_proof_config.key(),
-                        false,
-                    ),
-                    AccountMeta::new(
-                        ctx.accounts.post_verification_log.key(),
-                        false,
-                    ),
-                    AccountMeta::new(
-                        ctx.accounts.verifier.key(),
-                        false,
-                    ),
+                    AccountMeta::new_readonly(ctx.accounts.requester.key(), false),
+                    AccountMeta::new(ctx.accounts.post_proof_config.key(), false),
+                    AccountMeta::new(ctx.accounts.post_verification_log.key(), false),
+                    AccountMeta::new(ctx.accounts.verifier.key(), false),
                 ],
             }),
             None,
@@ -234,7 +231,6 @@ pub mod proof_of_post {
         ctx.accounts.post_verification_log.verifier = ctx.accounts.verifier.key();
         ctx.accounts.post_verification_log.post_url = args.post_url.clone();
         ctx.accounts.post_verification_log.config = ctx.accounts.post_proof_config.key();
-
 
         Ok(())
     }
@@ -292,18 +288,28 @@ pub mod proof_of_post {
             if is_valid_post {
                 // Transfer SOL reward to verifier
                 let reward_amount = ctx.accounts.post_proof_config.reward_amount;
-                
-                **ctx.accounts.post_proof_config.to_account_info().try_borrow_mut_lamports()? -= reward_amount;
-                **ctx.accounts.verifier.to_account_info().try_borrow_mut_lamports()? += reward_amount;
+
+                **ctx
+                    .accounts
+                    .post_proof_config
+                    .to_account_info()
+                    .try_borrow_mut_lamports()? -= reward_amount;
+                **ctx
+                    .accounts
+                    .verifier
+                    .to_account_info()
+                    .try_borrow_mut_lamports()? += reward_amount;
 
                 // Update claimers count
                 ctx.accounts.post_proof_config.claimers_count += 1;
-                
+
                 msg!("Post verified successfully. Transferred {} lamports to verifier. Total claimers: {}", 
                      reward_amount, ctx.accounts.post_proof_config.claimers_count);
 
                 // Deactivate config if max claimers reached
-                if ctx.accounts.post_proof_config.claimers_count >= ctx.accounts.post_proof_config.max_claimers {
+                if ctx.accounts.post_proof_config.claimers_count
+                    >= ctx.accounts.post_proof_config.max_claimers
+                {
                     ctx.accounts.post_proof_config.active = false;
                     msg!("Config deactivated - max claimers reached");
                 }
@@ -374,8 +380,7 @@ impl ExecutionTracker {
     }
 }
 
-#[derive(AnchorDeserialize, AnchorSerialize)]
-#[derive(InitSpace)]
+#[derive(AnchorDeserialize, AnchorSerialize, InitSpace)]
 pub struct CreateConfigArgs {
     #[max_len(10)]
     pub seeds: String,
@@ -439,7 +444,7 @@ pub struct VerifyPost<'info> {
         init,
         space = 8 + PostVerificationLog::INIT_SPACE,
         payer = verifier,
-        seeds = [b"postverificationlog3", verifier.key().as_ref()],
+        seeds = [b"postverificationlog", verifier.key().as_ref(), post_proof_config.key().as_ref()],
         bump,
     )]
     pub post_verification_log: Account<'info, PostVerificationLog>,
@@ -484,7 +489,7 @@ pub struct BonsolCallback<'info> {
 
     #[account(
         mut,
-        seeds = [b"postverificationlog3", verifier.key().as_ref()],
+        seeds = [b"postverificationlog", verifier.key().as_ref(), post_proof_config.key().as_ref()],
         bump
     )]
     pub post_verification_log: Account<'info, PostVerificationLog>,

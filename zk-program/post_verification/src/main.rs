@@ -132,19 +132,36 @@ fn main() {
     let post_text = post.record.text;
     println!("Post text: {:?}", post_text);
     
-    // Verify keywords
+    // Verify keywords - all must be present
     let post_text_lower = post_text.to_lowercase();
-    let mut has_keyword = keywords.is_empty();
+    let mut all_keywords_present = true;
     
-    for keyword in &keywords {
-        if post_text_lower.contains(&keyword.to_lowercase()) {
-            has_keyword = true;
-            break;
+    // If no keywords specified, consider it as passing
+    if keywords.is_empty() {
+        all_keywords_present = true;
+    } else {
+        // Check that all keywords are present
+        for keyword in &keywords {
+            if !post_text_lower.contains(&keyword.to_lowercase()) {
+                println!("Missing keyword: {:?}", keyword);
+                all_keywords_present = false;
+                break;
+            } else {
+                // Keyword found, text before and after keywords are printed
+                println!("Found keyword: {:?}", keyword);
+                if let Some(pos) = post_text_lower.find(&keyword.to_lowercase()) {
+                    let start = if pos >= 10 { pos - 10 } else { 0 };
+                    let end = if pos + keyword.len() + 10 <= post_text_lower.len() {
+                        pos + keyword.len() + 10
+                    } else { post_text_lower.len() };
+                    println!("Context: {:?}", &post_text[start..end]);
+                }
+            }
         }
     }
     
     // Return result
-    let result = if has_keyword { 1u8 } else { 0u8 };
+    let result = if all_keywords_present { 1u8 } else { 0u8 };
 
     println!("Result: {:?}", result);
     env::commit(&result);

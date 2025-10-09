@@ -12,7 +12,7 @@ const PROGRAM_ID = new PublicKey(
   "5MQLTq2D5ZhUAc6TDoAMXfnMeA32bo5DUxYco5LDMKAA"
 );
 const POST_VERIFICATION_IMAGE_ID =
-  "86eee7deeb7a2aa479c183db83bb208ff5302dd6acfc46d05aacaa1c9107f43f";
+  "e4836295bfe6bd17f8907d071535ff03fdf24aa6bc562792833b17dfc44703bb";
 const BONSOL_PROGRAM_ID = new PublicKey(
   "BoNsHRcyLLNdtnoDf8hiCNZpyehMC4FDMxs6NTxFi3ew"
 );
@@ -41,10 +41,10 @@ class ProofOfPostClient {
     );
   }
 
-  getPostVerificationLogPDA(verifier: PublicKey, postUrl: string): [PublicKey, number] {
+  getPostVerificationLogPDA(verifier: PublicKey, configPDA: PublicKey): [PublicKey, number] {
     return PublicKey.findProgramAddressSync(
       // [Buffer.from("postverificationlog"), verifier.toBuffer(), Buffer.from(postUrl)],
-      [Buffer.from("postverificationlog3"), verifier.toBuffer()],
+      [Buffer.from("postverificationlog"), verifier.toBuffer(), configPDA.toBuffer()],
       this.program.programId
     );
   }
@@ -220,7 +220,7 @@ class ProofOfPostClient {
 
     const [verificationLogPDA] = this.getPostVerificationLogPDA(
       this.payer.publicKey,
-      apiUrl
+      configPDA
     );
 
     console.log("🔑 Requester Account:", requesterAccount.toBase58());
@@ -256,26 +256,6 @@ class ProofOfPostClient {
     } catch (error) {
       console.error("❌ Verify post failed:", error);
       throw error;
-    }
-  }
-
-  // Get verification status
-  async getVerificationStatus(verifier: PublicKey, postUrl: string): Promise<void> {
-    console.log("📊 Checking verification status...");
-
-    const [verificationLogPDA] = this.getPostVerificationLogPDA(verifier, postUrl);
-
-    try {
-      const log = await this.program.account.postVerificationLog.fetch(verificationLogPDA);
-      console.log("📋 Verification Log:");
-      console.log("   Verifier:", log.verifier.toString());
-      console.log("   Config:", log.config.toString());
-      console.log("   Post ID:", log.postUrl);
-      console.log("   Verified:", log.isVerified);
-      console.log("   Slot:", log.slot.toString());
-      console.log("   Execution Account:", log.currentExecutionAccount?.toString() || "None");
-    } catch (error) {
-      console.log("❌ Verification log not found (verification not started or completed)");
     }
   }
 
@@ -390,7 +370,7 @@ const main = async (): Promise<void> => {
     //   100 // max 100 claimers
     // );
 
-    // console.log("\n" + "=".repeat(60));
+    console.log("\n" + "=".repeat(60));
 
     // Test URL conversion and size detection
     console.log("\n🔗 Step 2: Test URL Conversion");
