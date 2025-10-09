@@ -1,0 +1,17 @@
+[package]
+name = "post_verification"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.zkprogram]
+input_order = ["Public", "Private"]
+
+[build]
+target-dir = "./target"
+
+[workspace]
+
+[dependencies]
+risc0-zkvm = {version="2.3.1", default-features = false, features = ["std"]}
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }

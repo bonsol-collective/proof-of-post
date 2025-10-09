@@ -1,0 +1,11 @@
+{
+  "name": "post_verification",
+  "binaryPath": "./target/riscv32im-risc0-zkvm-elf/docker/post_verification.bin",
+  "imageId": "86eee7deeb7a2aa479c183db83bb208ff5302dd6acfc46d05aacaa1c9107f43f",
+  "inputOrder": [
+    "Public",
+    "Private"
+  ],
+  "signature": "6JDDJKdsNVDjekHqaRAKsaLXEm4mhwZ9VsDQMsafxTrJUz24BQDQRkKq5Bp3Sgb57wTUz3ZNaVwN6mF4LGUXHft",
+  "size": 431132
+}
