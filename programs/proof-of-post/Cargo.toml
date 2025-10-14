@@ -23,7 +23,7 @@ overflow-checks = true
 [dependencies]
 anchor-lang = { version = "0.31.1" ,features = ["init-if-needed"] }
 anchor-spl = {  version = "0.31.1" }
-bonsol-anchor-interface = { path = "../../../bonsol-anchor-interface" }
+bonsol-anchor-interface = { version = "0.6.0" }
 spl-token = {version ="6.0.0"}
 spl-associated-token-account = {version ="6.0.0"}
 

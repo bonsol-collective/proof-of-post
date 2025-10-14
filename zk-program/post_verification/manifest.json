@@ -1,11 +1,11 @@
 {
   "name": "post_verification",
-  "binaryPath": "./target/riscv32im-risc0-zkvm-elf/docker/post_verification.bin",
-  "imageId": "e4836295bfe6bd17f8907d071535ff03fdf24aa6bc562792833b17dfc44703bb",
+  "binaryPath": "/home/ubuntu/workspace/proof-of-post/zk-program/post_verification/target/riscv32im-risc0-zkvm-elf/docker/post_verification.bin",
+  "imageId": "4de2a43da6e788efef9837b71e055b2bfd83d18ca1c32b93cf5bfff58662aaa5",
   "inputOrder": [
     "Public",
     "Private"
   ],
-  "signature": "633s5bfGzTHVhYKMH3Mu9u6tamDttWK1u7CkzfjiJMa2tdiELcJ38FEwyQpFtTX8mQvSPrmr6GcdLjLg1Yp6rNum",
-  "size": 432876
+  "signature": "5H295i8r7x8GUwPWrTKYG6H2axWpGHBP2c5ArVhuG3hB5VCsbeFe8SR29H7fJXZeehemmE1LNnDusPr8kgg5gLQu",
+  "size": 547032
 }

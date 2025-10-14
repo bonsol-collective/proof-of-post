@@ -10,9 +10,9 @@ use anchor_lang::solana_program::program::invoke_signed;
 use bonsol_anchor_interface::callback::handle_callback;
 
 // Change this ID and make your own if you want to deploy to devnet
-declare_id!("5MQLTq2D5ZhUAc6TDoAMXfnMeA32bo5DUxYco5LDMKAA");
+declare_id!("A9LQgXf3hRDhr1bQiUJToyP2ZaEDHTMo9LNpRgakmuiK");
 const POST_VERIFICATION_IMAGE_ID: &str =
-    "e4836295bfe6bd17f8907d071535ff03fdf24aa6bc562792833b17dfc44703bb";
+    "4de2a43da6e788efef9837b71e055b2bfd83d18ca1c32b93cf5bfff58662aaa5";
 
 #[error_code]
 pub enum PostProofError {
