@@ -1,10 +1,12 @@
 **About Proof of Post**
+
 Proof of Post demonstrates how to use Bonsol to verify social media content on-chain. This example shows how campaigns can reward users for creating posts with specific keywords, verified through zero-knowledge proofs.
 
 **NOTE:** 
 This is a demo on devnet. Verification takes approximately 40 seconds - 1 minute (after latest Bonsol upgrades with v0.6.0 release). Check your wallet after this time to see if you received the reward.
 
 **How It Works**
+
 When you submit a BlueSky post URL for verification:
 1. Your wallet sends a transaction to the Proof of Post program with the post URL
 2. The program calls Bonsol to verify the post content
@@ -20,6 +22,7 @@ When you submit a BlueSky post URL for verification:
 * Campaign management with claim limits
 
 **Use Cases**
+
 This pattern can be extended to build:
 * Marketing campaigns with verifiable engagement
 * Content creator reward programs
