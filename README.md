@@ -1,4 +1,4 @@
-**About Proof of Post**
+**About Proof of Post:**
 
 Proof of Post demonstrates how to use Bonsol to verify social media content on-chain. This example shows how campaigns can reward users for creating posts with specific keywords, verified through zero-knowledge proofs.
 
@@ -32,6 +32,7 @@ This pattern can be extended to build:
 **Outcome:** 
 
 The zero-knowledge proof ensures that post content is verified without exposing the entire post data on-chain, maintaining privacy while enabling trustless verification.
+
 
 **Screenshots:**
 
