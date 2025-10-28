@@ -302,16 +302,22 @@ pub mod proof_of_post {
                 // Update claimers count
                 ctx.accounts.post_proof_config.claimers_count += 1;
 
-                msg!("Post verified successfully. Transferred {} lamports to verifier. Total claimers: {}", 
-                     reward_amount, ctx.accounts.post_proof_config.claimers_count);
+                msg!(
+                    "Post verified for campaign {:?}! Transferred {} lamports to verifier. Total claimers: {}",
+                    ctx.accounts.post_proof_config.seeds,
+                    reward_amount,
+                    ctx.accounts.post_proof_config.claimers_count
+                );
 
                 // Deactivate config if max claimers reached
                 if ctx.accounts.post_proof_config.claimers_count
                     >= ctx.accounts.post_proof_config.max_claimers
                 {
                     ctx.accounts.post_proof_config.active = false;
-                    msg!("Config deactivated - max claimers reached");
+                    msg!("Config deactivated - max claimers reached for campaign {:?}", ctx.accounts.post_proof_config.seeds);
                 }
+            } else {
+                msg!("Post verification failed for campaign {:?}", ctx.accounts.post_proof_config.seeds);
             }
 
             Ok(())
