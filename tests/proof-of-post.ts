@@ -12,7 +12,7 @@ const PROGRAM_ID = new PublicKey(
   "5MQLTq2D5ZhUAc6TDoAMXfnMeA32bo5DUxYco5LDMKAA"
 );
 const POST_VERIFICATION_IMAGE_ID =
-  "e4836295bfe6bd17f8907d071535ff03fdf24aa6bc562792833b17dfc44703bb";
+  "4de2a43da6e788efef9837b71e055b2bfd83d18ca1c32b93cf5bfff58662aaa5";
 const BONSOL_PROGRAM_ID = new PublicKey(
   "BoNsHRcyLLNdtnoDf8hiCNZpyehMC4FDMxs6NTxFi3ew"
 );
@@ -363,12 +363,12 @@ const main = async (): Promise<void> => {
 
     // Create config
     console.log("\n📝 Step 1: Create Config");
-    // await client.createConfig(
-    //   "campaign-v1",
-    //   ["some", "sushi", "reading"],
-    //   10000, // 0.001 SOL reward
-    //   100 // max 100 claimers
-    // );
+    await client.createConfig(
+      "campaign-v1",
+      ["some", "sushi", "reading"],
+      10000, // 0.001 SOL reward
+      100 // max 100 claimers
+    );
 
     console.log("\n" + "=".repeat(60));
 
@@ -382,6 +382,9 @@ const main = async (): Promise<void> => {
     console.log("✅ Response size:", size, "bytes");
 
     console.log("\n" + "=".repeat(60));
+
+    // sleep 3 seconds
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Verify a post
     console.log("\n🔍 Step 3: Verify Post");

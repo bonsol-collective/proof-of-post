@@ -6,11 +6,11 @@ use bonsol_anchor_interface::instructions::{
 };
 use bonsol_anchor_interface::Bonsol;
 
-use anchor_lang::solana_program::program::invoke_signed;
+use anchor_lang::solana_program::program::invoke;
 use bonsol_anchor_interface::callback::handle_callback;
 
 // Change this ID and make your own if you want to deploy to devnet
-declare_id!("A9LQgXf3hRDhr1bQiUJToyP2ZaEDHTMo9LNpRgakmuiK");
+declare_id!("5MQLTq2D5ZhUAc6TDoAMXfnMeA32bo5DUxYco5LDMKAA");
 const POST_VERIFICATION_IMAGE_ID: &str =
     "4de2a43da6e788efef9837b71e055b2bfd83d18ca1c32b93cf5bfff58662aaa5";
 
@@ -194,7 +194,7 @@ pub mod proof_of_post {
         .map_err(|_| ProgramError::InvalidInstructionData)?;
 
         msg!("Invoking Bonsol execute_v1 CPI");
-        invoke_signed(
+        invoke(
             &bonsol_ix,
             &[
                 ctx.accounts.verifier.to_account_info().clone(),
@@ -208,7 +208,6 @@ pub mod proof_of_post {
                 ctx.accounts.verifier.to_account_info().clone(),
                 ctx.accounts.post_proof_program.to_account_info().clone(),
             ],
-            &[&[args.current_req_id.as_bytes(), &[ctx.bumps.requester]]],
         )?;
         msg!("Bonsol execute_v1 CPI invoked");
 
